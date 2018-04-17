@@ -1,41 +1,39 @@
+import Vue from 'vue'
+
 const revealImage = element => {
   element.el.display = 'none'
   element.el.src = element.src
   element.el.display = 'block'
 }
 
-const elOffsetDoc = el => {
-  let offsetParent = el.offsetParent
-  let offsetTop = el.offsetTop
-  while (offsetParent) {
-    offsetTop += offsetParent.offsetTop
-    offsetParent = offsetParent.offsetParent
-  }
-  return offsetTop
-}
-
 export default class LazyLoad {
-  constructor(Vue) {
+  constructor() {
     this.elements = []
     this.windowHeight = window.innerHeight
     this.scrollY = -1
 
-    return this.directive(Vue)
+    return this.directive()
   }
 
-  directive(Vue) {
+  directive() {
     window.addEventListener('scroll', this.onScroll.bind(this), { passive: true })
     window.addEventListener('resize', this.onResize.bind(this), { passive: true })
-    const elements = this.elements
+
     return {
       bind(el, bindings) {},
-      inserted(el, bindings, vnode) {
+      inserted: (el, bindings) => {
         Vue.nextTick(() => {
-          elements.push({
+          let element = {
+            el,
             src: bindings.value,
-            offsetTop: elOffsetDoc(el),
-            el
-          })
+            clientRect: el.getBoundingClientRect()
+          }
+          if (this.isElInView(element)) {
+            revealImage(element)
+            element = null
+            return
+          }
+          this.elements.push(element)
         })
       },
       update(el, bindings) {
@@ -57,7 +55,8 @@ export default class LazyLoad {
   onResize(e) {}
 
   isElInView(element) {
-    return this.windowHeight + this.scrollY >= element.offsetTop && element.offsetTop >= this.scrollY
+    const offsetTop = element.clientRect.top
+    return this.windowHeight + this.scrollY >= offsetTop && offsetTop >= this.scrollY
   }
 
   refreshEls() {

@@ -4,15 +4,23 @@ import LazyLoad from './directives/lazyload'
 const ImgList = Vue.extend({
   data() {
     return {
-      links: new Array(100).fill('https://static1.squarespace.com/static/526a8a82e4b07233cf88d715/t/526d3712e4b0d55c33ac8705/1382889235791/handy.jpg?format=1000w')
+      links: new Array(100).fill('https://picsum.photos/200/50?random')
+    }
+  },
+  methods: {
+    add() {
+      this.links = this.links.concat(this.links)
     }
   },
   directives: {
-    'lazy-load': new LazyLoad(Vue)
+    'lazy-load': new LazyLoad()
   },
   template: `
-    <div class="image-list">
-      <img v-lazy-load:src="link" :key="index" class="image-item" v-for="(link,index) in links" />
+    <div>
+      <button @click="add">add</button>
+      <div class="image-list">
+        <img v-lazy-load:src="link + index" :key="index" class="image-item" v-for="(link,index) in links" />
+      </div>
     </div>
   `
 })
