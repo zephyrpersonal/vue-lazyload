@@ -1,10 +1,12 @@
 import Vue from 'vue/dist/vue'
-import LazyLoad from './directives/lazyload'
+import LazyLoad from '../src/index'
+
+Vue.use(LazyLoad)
 
 const ImgList = Vue.extend({
   data() {
     return {
-      links: new Array(100).fill('https://picsum.photos/200/50?random')
+      links: new Array(20).fill('https://picsum.photos/200/256?random')
     }
   },
   methods: {
@@ -12,14 +14,13 @@ const ImgList = Vue.extend({
       this.links = this.links.concat(this.links)
     }
   },
-  directives: {
-    'lazy-load': new LazyLoad()
-  },
   template: `
     <div>
-      <button @click="add">add</button>
+      <h1>DEMO</h1>
       <div class="image-list">
-        <img v-lazy-load:src="link + index" :key="index" class="image-item" v-for="(link,index) in links" />
+        <div class="image-item" :key="index" v-for="(link,index) in links">
+          <img v-lazy-load:src="link + index"  />
+        </div>
       </div>
     </div>
   `
