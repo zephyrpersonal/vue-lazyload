@@ -1,57 +1,70 @@
 'use strict';
 
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-var LazyElement = function LazyElement(el, bindings, options) {
-  var _this = this;
+var LazyElement = function () {
+  function LazyElement(el, bindings, options) {
+    _classCallCheck(this, LazyElement);
 
-  _classCallCheck(this, LazyElement);
+    this.el = el;
+    this.bindings = bindings;
+    this.options = options;
+    this.state = 'loading';
+  }
 
-  this.preloadImage = function (resolve) {
-    var image = new Image();
-    image.src = _this.bindings.value;
-    image.onload = function () {
-      resolve(image);
-      image = null;
-    };
-  };
+  _createClass(LazyElement, [{
+    key: 'preloadImage',
+    value: function preloadImage(resolve) {
+      var image = new Image();
+      image.src = this.bindings.value;
+      image.onload = function () {
+        resolve(image);
+        image = null;
+      };
+    }
+  }, {
+    key: 'reset',
+    value: function reset(newValue) {
+      this.el.setAttribute('src', '');
+      this.bindings.value = newValue;
+      this.el.classList.remove(this.options.onLoadClassName);
+      this.state = 'loading';
+      this.render();
+    }
+  }, {
+    key: 'render',
+    value: function render() {
+      var _this = this;
 
-  this.reset = function (newValue) {
-    _this.el.setAttribute('src', '');
-    _this.bindings.value = newValue;
-    _this.el.classList.remove(_this.options.onLoadClassName);
-    _this.state = 'loading';
-    _this.render();
-  };
+      var cb = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : function () {};
 
-  this.render = function () {
-    var cb = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : function () {};
+      if (this.state === 'loaded') return cb(false);
+      if (!this.isElInView()) return cb(false);
+      this.preloadImage(function (image) {
+        _this.el.setAttribute('src', image.src);
+        _this.el.classList.add(_this.options.onLoadClassName);
+        _this.state = 'loaded';
+        cb(true);
+      });
+    }
+  }, {
+    key: 'isElInView',
+    value: function isElInView() {
+      var rect = this.el.getBoundingClientRect();
+      return rect.top > 0 && rect.top < window.innerHeight || rect.top < 0 && rect.top > -rect.height;
+    }
+  }, {
+    key: 'destroy',
+    value: function destroy() {
+      this.el = null;
+      this.bindings = null;
+    }
+  }]);
 
-    if (_this.state === 'loaded') return cb(false);
-    if (!_this.isElInView()) return cb(false);
-    _this.preloadImage(function (image) {
-      _this.el.setAttribute('src', image.src);
-      _this.el.classList.add(_this.options.onLoadClassName);
-      _this.state = 'loaded';
-      cb(true);
-    });
-  };
-
-  this.isElInView = function () {
-    var rect = _this.el.getBoundingClientRect();
-    return rect.top > 0 && rect.top < window.innerHeight || rect.top < 0 && rect.top > -rect.height;
-  };
-
-  this.destroy = function () {
-    _this.el = null;
-    _this.bindings = null;
-  };
-
-  this.el = el;
-  this.bindings = bindings;
-  this.options = options;
-  this.state = 'loading';
-};
+  return LazyElement;
+}();
 
 var LazyLoad = function LazyLoad(Vue, options) {
   var _this2 = this;

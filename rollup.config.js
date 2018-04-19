@@ -4,7 +4,8 @@ module.exports = {
   input: 'src/index.js',
   output: {
     file: 'bundle.js',
-    format: 'cjs'
+    format: 'cjs',
+    name: 'TinyVueImgLazyload'
   },
   plugins: [
     babel({

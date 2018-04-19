@@ -6,7 +6,7 @@ export class LazyElement {
     this.state = 'loading'
   }
 
-  preloadImage = resolve => {
+  preloadImage(resolve) {
     let image = new Image()
     image.src = this.bindings.value
     image.onload = () => {
@@ -15,7 +15,7 @@ export class LazyElement {
     }
   }
 
-  reset = newValue => {
+  reset(newValue) {
     this.el.setAttribute('src', '')
     this.bindings.value = newValue
     this.el.classList.remove(this.options.onLoadClassName)
@@ -23,7 +23,7 @@ export class LazyElement {
     this.render()
   }
 
-  render = (cb = () => {}) => {
+  render(cb = () => {}) {
     if (this.state === 'loaded') return cb(false)
     if (!this.isElInView()) return cb(false)
     this.preloadImage(image => {
@@ -34,12 +34,12 @@ export class LazyElement {
     })
   }
 
-  isElInView = () => {
+  isElInView() {
     const rect = this.el.getBoundingClientRect()
     return (rect.top > 0 && rect.top < window.innerHeight) || (rect.top < 0 && rect.top > -rect.height)
   }
 
-  destroy = () => {
+  destroy() {
     this.el = null
     this.bindings = null
   }

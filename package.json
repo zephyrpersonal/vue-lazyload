@@ -4,7 +4,7 @@
   "main": "bundle.js",
   "license": "MIT",
   "scripts": {
-    "dev": "parcel example/index.html",
+    "dev": "parcel example/index.html --open",
     "build": "rollup -c"
   },
   "devDependencies": {
