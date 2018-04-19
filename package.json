@@ -1,20 +1,25 @@
 {
-  "name": "lazyload",
+  "name": "tiny-vue-img-lazyload",
   "version": "1.0.0",
-  "main": "src/index.js",
+  "main": "bundle.js",
   "license": "MIT",
   "scripts": {
-    "dev": "parcel example/index.html"
+    "dev": "parcel example/index.html",
+    "build": "rollup -c"
   },
   "devDependencies": {
+    "babel-core": "^6.26.0",
     "babel-plugin-transform-class-properties": "^6.24.1",
     "babel-plugin-transform-object-rest-spread": "^6.26.0",
     "babel-preset-env": "^1.6.1",
     "babel-preset-vue": "^2.0.2",
+    "lodash": "^4.17.5",
     "parcel-bundler": "^1.7.1",
+    "rollup": "^0.58.1",
+    "rollup-plugin-babel": "^3.0.3",
     "stylus": "^0.54.5"
   },
-  "dependencies": {
+  "peerDependencies": {
     "vue": "^2.5.16"
   }
 }

@@ -24,12 +24,15 @@ html
       height 100%
       border 1px solid rgba(0, 0, 0, 0.3)
 
+      &.loaded
+        animation fadeIn 1s ease
+
   &-loading
     animation flash 1s ease infinite
 
-@keyframes flash
+@keyframes fadeIn
   0%
-    background #eee
+    opacity 0
 
   100%
-    background #999
+    opacity 1

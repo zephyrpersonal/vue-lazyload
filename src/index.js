@@ -2,7 +2,7 @@ import { LazyLoad } from './lazyload'
 
 export default {
   install(Vue, options = {}) {
-    const lazyload = new LazyLoad(Vue)
+    const lazyload = new LazyLoad(Vue, options)
 
     Vue.directive('lazy-load', {
       bind: lazyload.bind,
