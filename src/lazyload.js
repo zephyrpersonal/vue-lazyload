@@ -1,3 +1,5 @@
+import raf from 'raf'
+
 export class LazyElement {
   constructor(el, bindings, options) {
     this.el = el
@@ -61,7 +63,7 @@ export class LazyLoad {
     if (this.scrollY !== window.pageYOffset || this.windowHeight !== window.innerHeight || this.windowWidth !== window.innerWidth) {
       this.batchRender()
     }
-    requestAnimationFrame(this.detectWindowChange)
+    raf(this.detectWindowChange)
   }
 
   batchRender = () => {
